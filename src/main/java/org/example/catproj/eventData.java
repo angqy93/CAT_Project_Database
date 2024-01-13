@@ -11,12 +11,16 @@ public class eventData {
     private String desc;
     private String imag;
 
-    public eventData(String name, String date, String time, String desc, String imag){
+    public eventData(int eventID, String name, String date, String time, String desc, String imag){
         this.name = name;
         this.date = date;
         this.time = time;
         this.desc = desc;
         this.imag = imag;
+    }
+
+    public int getEventId() {
+        return eventId;
     }
 
     public String getName(){
