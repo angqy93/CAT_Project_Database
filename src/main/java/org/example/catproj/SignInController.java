@@ -2,12 +2,19 @@ package org.example.catproj;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.*;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignInController{
 
@@ -48,6 +55,86 @@ public class SignInController{
     private Statement statement;
     private ResultSet result;
 
+    public boolean validEmail(){
+
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9][a-zA-Z0-9._]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+");
+
+        Matcher match = pattern.matcher(signup_email.getText());
+
+        Alert alert;
+
+        if(match.find() && match.group().equals(signup_email.getText())){
+            return true;
+        }else{
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid email");
+            alert.showAndWait();
+
+            return false;
+        }
+    }
+    public void signup(){
+        String sql = "INSERT INTO USER_PROF (USER_EMAIL, USER_NAME, USER_PASS) VALUES(?,?,?)";
+
+        String sql1= "SELECT USER_NAME FROM USER_PROF";
+
+        connect = database.connectDB();
+
+        try{
+            PreparedStatement pstmt = connect.prepareStatement(sql);
+            pstmt.setString(1, signup_email.getText());
+            pstmt.setString(2, signup_username.getText());
+            pstmt.setString(3, signup_password.getText());
+
+            Alert alert;
+
+            if(signup_email.getText().isEmpty()||signup_username.getText().isEmpty()||signup_username.getText().isEmpty()){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+
+            } else if(signup_password.getText().length() > 8) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Invalid Password");
+                    alert.showAndWait();
+            } else {
+
+                if (validEmail()) {
+                    PreparedStatement pstmt1 = connect.prepareStatement(sql1);
+                    result = pstmt1.executeQuery();
+                    if(result.next()){
+
+                        alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText(signup_username.getText() + " was taken.");
+                        alert.showAndWait();
+
+                    } else {
+
+                        pstmt.execute();
+
+                        alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Information Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Successfully created an account!");
+                        alert.showAndWait();
+
+                        signup_email.setText("");
+                        signup_username.setText("");
+                        signup_password.setText("");
+                    }
+
+                }
+            }
+        } catch(Exception e){e.printStackTrace();}
+    }
     public void signin(){
 
         String sql = "SELECT * FROM USER_PROF WHERE USER_NAME = ? AND USER_PASS = ?";
@@ -60,7 +147,6 @@ public class SignInController{
                 pstmt.setString(1, signin_username.getText());
                 pstmt.setString(2, signin_password.getText());
 
-                System.out.println("Ten");
                 result = pstmt.executeQuery();
 
                 Alert alert;
@@ -71,16 +157,29 @@ public class SignInController{
                     alert.setHeaderText(null);
                     alert.setContentText("Please fill all blank fields");
                     alert.showAndWait();
+
                 } else {
                     if (result.next()) {
-                        System.out.println("Eleven");
+
+                        getData.username = signin_username.getText();
+
                         alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setTitle("Information Message.");
                         alert.setHeaderText(null);
                         alert.setContentText("Successfully Login!");
                         alert.showAndWait();
+
+                        signin_button.getScene().getWindow().hide();
+
+                        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("DashBoard.fxml")));
+
+                        Stage stage = new Stage();
+                        Scene scene = new Scene(root);
+
+                        stage.setScene(scene);
+                        stage.show();
+
                     } else {
-                        System.out.println("Twelve");
                         alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error Message.");
                         alert.setHeaderText(null);
