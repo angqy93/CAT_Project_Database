@@ -10,7 +10,7 @@ public class database {
 
     public static Connection connectDB() {
 
-        String url = "jdbc:sqlite:C:/Users/Angqy/Desktop/CAT201/src/main/resources/dat/project.db" ;
+        String url = "jdbc:sqlite:./src/main/resources/dat/project.db" ;
 
         try{
 
