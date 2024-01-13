@@ -288,17 +288,13 @@ public class DashBoardController {
 
     public void updateAddEvents() {
 
-        int numid = getData.id;
         String uri = getData.path;
         uri = uri.replace("\\","\\\\");
         String sql = "UPDATE EVENT_DET SET EVENT_NAME = '" + addEvent_name.getText()
                 + "', EVENT_DATE = '" + addEvent_date.getText()
                 + "', EVENT_TIME = '" + addEvent_time.getText()
                 + "', EVENT_DESC = '" + addEvent_desc.getText()
-                + "', EVENT_IMAGE_PATH = '" + uri
-                + "' WHERE EVENT_ID = '" + numid + "'";
-
-        System.out.println(numid);
+                + "', EVENT_IMAGE_PATH = '" + uri + "'";
 
         connect = database.connectDB();
 
@@ -308,6 +304,7 @@ public class DashBoardController {
             Alert alert;
 
             if(addEvent_name.getText().isEmpty()||addEvent_date.getText().isEmpty()||addEvent_time.getText().isEmpty()||addEvent_desc.getText().isEmpty()||addEvent_imageview.getImage() == null){
+
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
@@ -426,14 +423,13 @@ public class DashBoardController {
             eventData eveD;
 
             while(result.next()){
-                int eventID = result.getInt("EVENT_ID");
                 String eventName = result.getString("EVENT_NAME");
                 String eventDate = result.getString("EVENT_DATE");
                 String eventTime = result.getString("EVENT_TIME");
                 String eventDesc = result.getString("EVENT_DESC");
                 String eventImagePath = result.getString("EVENT_IMAGE_PATH");
 
-                eveD = new eventData(eventID, eventName, eventDate, eventTime, eventDesc, eventImagePath);
+                eveD = new eventData(eventName, eventDate, eventTime, eventDesc, eventImagePath);
                 listData.add(eveD);
             }
         }catch(Exception e){
@@ -498,8 +494,8 @@ public class DashBoardController {
             return;
         }
 
-        getData.id = eveD.getEventId();
         getData.path = eveD.getImag();
+
         addEvent_name.setText(eveD.getName());
         addEvent_date.setText(eveD.getDate());
         addEvent_time.setText(eveD.getTime());
@@ -546,18 +542,8 @@ public class DashBoardController {
 
             stage.setScene(scene);
             stage.show();
-        } catch(Exception e){
+        }catch(Exception e){
             e.printStackTrace();
-        } finally {
-            // Close the database connection in a finally block to ensure it gets closed even if an exception occurs
-            try {
-                if (connect != null) {
-                    connect.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                // Handle the exception according to your application's needs
-            }
         }
     }
     public void switchForm(ActionEvent event){
