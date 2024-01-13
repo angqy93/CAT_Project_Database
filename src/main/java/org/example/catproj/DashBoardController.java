@@ -1,22 +1,32 @@
 package org.example.catproj;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.sql.*;
 import java.util.ResourceBundle;
 
 public class DashBoardController {
@@ -28,16 +38,16 @@ public class DashBoardController {
     private Button addEvent_clear;
 
     @FXML
-    private TableColumn<?, ?> addEvent_col_date;
+    private TableColumn<eventData, String> addEvent_col_date;
 
     @FXML
-    private TableColumn<?, ?> addEvent_col_desc;
+    private TableColumn<eventData, String> addEvent_col_desc;
 
     @FXML
-    private TableColumn<?, ?> addEvent_col_name;
+    private TableColumn<eventData, String> addEvent_col_name;
 
     @FXML
-    private TableColumn<?, ?> addEvent_col_time;
+    private TableColumn<eventData, String> addEvent_col_time;
 
     @FXML
     private TextField addEvent_date;
@@ -67,7 +77,7 @@ public class DashBoardController {
     private TextField addEvent_search;
 
     @FXML
-    private TableView<?> addEvent_tableview;
+    private TableView<eventData> addEvent_tableview;
 
     @FXML
     private TextField addEvent_time;
@@ -91,16 +101,16 @@ public class DashBoardController {
     private Button joinEvent_btn;
 
     @FXML
-    private TableColumn<?, ?> joinEvent_col_date;
+    private TableColumn<eventData, String> joinEvent_col_date;
 
     @FXML
-    private TableColumn<?, ?> joinEvent_col_desc;
+    private TableColumn<eventData, String> joinEvent_col_desc;
 
     @FXML
-    private TableColumn<?, ?> joinEvent_col_name;
+    private TableColumn<eventData, String> joinEvent_col_name;
 
     @FXML
-    private TableColumn<?, ?> joinEvent_col_time;
+    private TableColumn<eventData, String> joinEvent_col_time;
 
     @FXML
     private TextField joinEvent_date;
@@ -232,9 +242,277 @@ public class DashBoardController {
         username.setText(getData.username);
     }
 
+    private Image image;
     private double x = 0;
     private double y = 0;
 
+    private Connection connect;
+    private ResultSet result;
+    public void importImage(){
+
+        FileChooser open = new FileChooser();
+
+        open.setTitle("Open Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File","*png","*jpg"));
+
+        Stage stage = (Stage) addEvent_form.getScene().getWindow();
+        File file = open.showOpenDialog(stage);
+
+        if (file != null) {
+
+            image = new Image(file.toURI().toString(), 120, 160, false, true);
+            addEvent_imageview.setImage(image);
+
+            String destinationFolder = "src/main/resources/image";  // Adjust the path as needed
+            String filename = file.getName();
+            File destination = new File(destinationFolder, filename);
+
+            try {
+                Path sourcePath = file.toPath();
+                Path destinationPath = destination.toPath();
+                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+                getData.path = "./src/main/resources/image/" + filename;
+            } catch (IOException e) {e.printStackTrace();}
+
+        }
+    }
+
+    public void clearAddEventList(){
+        addEvent_name.setText("");
+        addEvent_date.setText("");
+        addEvent_time.setText("");
+        addEvent_desc.setText("");
+        addEvent_imageview.setImage(null);
+    }
+
+    public void updateAddEvents() {
+
+        String uri = getData.path;
+        uri = uri.replace("\\","\\\\");
+        String sql = "UPDATE EVENT_DET SET EVENT_NAME = '" + addEvent_name.getText()
+                + "', EVENT_DATE = '" + addEvent_date.getText()
+                + "', EVENT_TIME = '" + addEvent_time.getText()
+                + "', EVENT_DESC = '" + addEvent_desc.getText()
+                + "', EVENT_IMAGE_PATH = '" + uri + "'";
+
+        connect = database.connectDB();
+
+        try{
+            Statement statement = connect.createStatement();
+
+            Alert alert;
+
+            if(addEvent_name.getText().isEmpty()||addEvent_date.getText().isEmpty()||addEvent_time.getText().isEmpty()||addEvent_desc.getText().isEmpty()||addEvent_imageview.getImage() == null){
+
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select the movie first.");
+                alert.showAndWait();
+            }else{
+                statement.executeUpdate(sql);
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select the movie first.");
+                alert.showAndWait();
+
+                clearAddEventList();
+                showAddEventList();
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void insertAddEvents(){
+
+        String sql1 = "SELECT * FROM EVENT_DET WHERE EVENT_NAME = '" + addEvent_name.getText() +"'";
+
+        connect = database.connectDB();
+
+        Alert alert;
+
+        try{
+            PreparedStatement pstmt1 = connect.prepareStatement(sql1);
+            result = pstmt1.executeQuery();
+
+            if(result.next()) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText(addEvent_name.getText() + " was already exist!");
+                alert.showAndWait();
+
+            } else{
+                if(addEvent_name.getText().isEmpty()||addEvent_date.getText().isEmpty()||addEvent_time.getText().isEmpty()||addEvent_desc.getText().isEmpty()||addEvent_imageview.getImage() == null){
+
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please fill in the blanks");
+                    alert.showAndWait();
+
+                } else {
+
+                    String sql = "INSERT INTO EVENT_DET(EVENT_NAME, EVENT_DATE, EVENT_TIME, EVENT_DESC, EVENT_IMAGE_PATH) VALUES (?,?,?,?,?)";
+
+                    String uri = getData.path;
+                    uri = uri.replace("\\","\\\\");
+
+                    PreparedStatement pstmt = connect.prepareStatement(sql);
+                    pstmt.setString(1, addEvent_name.getText());
+                    pstmt.setString(2, addEvent_date.getText());
+                    pstmt.setString(3, addEvent_time.getText());
+                    pstmt.setString(4, addEvent_desc.getText());
+                    pstmt.setString(5, uri);
+
+                    pstmt.execute();
+
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully add new movie!");
+                    alert.showAndWait();
+
+                    clearAddEventList();
+                    showAddEventList();
+                }
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            // Close the database connection in a finally block to ensure it gets closed even if an exception occurs
+            try {
+                if (connect != null) {
+                    connect.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Handle the exception according to your application's needs
+            }
+        }
+    }
+    public ObservableList<eventData> addEventList(){
+
+        ObservableList<eventData> listData = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM EVENT_DET";
+
+        connect = database.connectDB();
+
+        try{
+
+            PreparedStatement pstmt = connect.prepareStatement(sql);
+            result = pstmt.executeQuery();
+
+            eventData eveD;
+
+            while(result.next()){
+                int eventID = result.getInt("EVENT_ID");
+                String eventName = result.getString("EVENT_NAME");
+                String eventDate = result.getString("EVENT_DATE");
+                String eventTime = result.getString("EVENT_TIME");
+                String eventDesc = result.getString("EVENT_DESC");
+                String eventImagePath = result.getString("EVENT_IMAGE_PATH");
+
+                eveD = new eventData(eventID, eventName, eventDate, eventTime, eventDesc, eventImagePath);
+                listData.add(eveD);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            // Close the database connection in a finally block to ensure it gets closed even if an exception occurs
+            try {
+                if (connect != null) {
+                    connect.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Handle the exception according to your application's needs
+            }
+        }
+        return listData;
+    }
+
+    private ObservableList<eventData> listAddEvent;
+    public void showAddEventList(){
+        listAddEvent = addEventList();
+
+        addEvent_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        addEvent_col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        addEvent_col_time.setCellValueFactory(new PropertyValueFactory<>("time"));
+        addEvent_col_desc.setCellValueFactory(new PropertyValueFactory<>("desc"));
+        addEvent_col_desc.setCellFactory(getWrapTextCellFactory());
+
+        addEvent_tableview.setItems(listAddEvent);
+    }
+
+    private Callback<TableColumn<eventData, String>, TableCell<eventData, String>> getWrapTextCellFactory() {
+        return col -> {
+            TableCell<eventData, String> cell = new TableCell<>() {
+                private final Text text = new Text();
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        text.setText(item);
+                        text.wrappingWidthProperty().bind(col.widthProperty());
+                        setGraphic(text);
+                    }
+                }
+            };
+
+            cell.setStyle("-fx-alignment: CENTER-LEFT;");
+
+            return cell;
+        };
+    }
+
+    public void selectAddEventList(){
+        eventData eveD = addEvent_tableview.getSelectionModel().getSelectedItem();
+        int num = addEvent_tableview.getSelectionModel().getSelectedIndex();
+
+        if((num-1)< -1){
+            return;
+        }
+
+        getData.path = eveD.getImag();
+
+        addEvent_name.setText(eveD.getName());
+        addEvent_date.setText(eveD.getDate());
+        addEvent_time.setText(eveD.getTime());
+        addEvent_desc.setText(eveD.getDesc());
+
+        String projectRoot = System.getProperty("user.dir");
+        String imagePath = eveD.getImag();
+
+        File imageFile = new File(projectRoot, imagePath);
+        URI imageUri = imageFile.toURI();
+
+        URL imageUrl = null;
+        try {
+            imageUrl = imageUri.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        if(imageFile.exists()) {
+        image = new Image(imageUrl.toString(), 120, 160, false, true);
+        addEvent_imageview.setImage(image);
+    } else {
+        System.out.println("Image file not found: " + imageFile.getAbsolutePath());
+    }
+    }
     public void logOut(){
         signout.getScene().getWindow().hide();
         try {
@@ -255,7 +533,9 @@ public class DashBoardController {
 
             stage.setScene(scene);
             stage.show();
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
     public void switchForm(ActionEvent event){
         if(event.getSource()==dashboard_btn){
@@ -322,6 +602,9 @@ public class DashBoardController {
     }
 
     public void initialize(){
+
         displayUsername();
+        showAddEventList();
+
     }
 }

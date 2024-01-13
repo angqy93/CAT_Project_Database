@@ -16,6 +16,11 @@
     -fx-alignment: CENTER_LEFT;
 }
 
+.scroll-pane {
+    -fx-hbar-policy: NEVER;
+    -fx-vbar-policy: NEVER;
+}
+
 .sign_out{
     -fx-background-color: #ae2d3c;
     -fx-background-radius: 15px;

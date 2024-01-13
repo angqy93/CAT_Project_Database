@@ -52,7 +52,6 @@ public class SignInController{
     private TextField signup_username;
 
     private Connection connect;
-    private Statement statement;
     private ResultSet result;
 
     public boolean validEmail(){
@@ -76,9 +75,10 @@ public class SignInController{
         }
     }
     public void signup(){
+
         String sql = "INSERT INTO USER_PROF (USER_EMAIL, USER_NAME, USER_PASS) VALUES(?,?,?)";
 
-        String sql1= "SELECT USER_NAME FROM USER_PROF";
+        String sql1= "SELECT USER_NAME FROM USER_PROF WHERE USER_NAME = '" +signup_username.getText() + "'";
 
         connect = database.connectDB();
 
@@ -108,6 +108,7 @@ public class SignInController{
                 if (validEmail()) {
                     PreparedStatement pstmt1 = connect.prepareStatement(sql1);
                     result = pstmt1.executeQuery();
+
                     if(result.next()){
 
                         alert = new Alert(Alert.AlertType.ERROR);
@@ -135,7 +136,7 @@ public class SignInController{
             }
         } catch(Exception e){e.printStackTrace();}
     }
-    public void signin(){
+    public void signin() {
 
         String sql = "SELECT * FROM USER_PROF WHERE USER_NAME = ? AND USER_PASS = ?";
 
@@ -192,6 +193,14 @@ public class SignInController{
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connect != null) {
+                    connect.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
     public void switchform(ActionEvent event){
