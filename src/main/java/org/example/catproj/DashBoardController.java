@@ -240,32 +240,26 @@ public class DashBoardController {
     @FXML
     private Label username;
     public void searchAddEvents() {
-        FilteredList<eventData> filter = new FilteredList<>(listAddEvent, e -> true);
+        try {
+            FilteredList<eventData> filteredData = new FilteredList<>(listAddEvent, b -> true);
+            addEvent_search.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredData.setPredicate(event -> {
+                    if (newValue == null || newValue.isEmpty() || newValue.isBlank()) {
+                        return true;
+                    }
 
-        addEvent_search.textProperty().addListener((observable, oldValue, newValue) -> {
-            filter.setPredicate(predicateEventData -> {
-                if ((newValue == null) || newValue.isEmpty()) {
-                    return true;
-                }
+                    String searchKeyword = newValue.toLowerCase();
 
-                String keySearch = newValue.toLowerCase();
-
-                if (predicateEventData.getName().toLowerCase().contains(keySearch)) {
-                    return true;
-                } else if (predicateEventData.getDate().toLowerCase().contains(keySearch)) {
-                    return true;
-                } else if (predicateEventData.getTime().toLowerCase().contains(keySearch)) {
-                    return true;
-                }
-
-                return false;
+                    return event.getName().toLowerCase().contains(searchKeyword);
+                });
             });
-        });
 
-        SortedList<eventData> sortData = new SortedList<>(filter);
-        sortData.comparatorProperty().bind(addEvent_tableview.comparatorProperty());
-
-        addEvent_tableview.setItems(sortData);
+            SortedList<eventData> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(addEvent_tableview.comparatorProperty());
+            addEvent_tableview.setItems(sortedData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void displayUsername(){
@@ -692,6 +686,6 @@ public class DashBoardController {
 
         displayUsername();
         showAddEventList();
-
+        searchAddEvents();
     }
 }
