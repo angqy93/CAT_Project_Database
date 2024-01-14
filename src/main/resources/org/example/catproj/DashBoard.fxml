@@ -89,7 +89,7 @@
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <AnchorPane fx:id="dashboard_form" layoutX="146.0" layoutY="150.0" prefHeight="500.0" prefWidth="780.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane fx:id="dashboard_form" layoutX="146.0" layoutY="150.0" prefHeight="500.0" prefWidth="780.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <AnchorPane layoutX="20.0" layoutY="14.0" prefHeight="200.0" prefWidth="740.0" styleClass="bg-white" stylesheets="@../../../css/designDashboard.css">
                            <children>
@@ -133,7 +133,7 @@
                         </AnchorPane>
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="addEvent_form" prefHeight="500.0" prefWidth="780.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane fx:id="addEvent_form" prefHeight="500.0" prefWidth="780.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="470.0" prefWidth="250.0" styleClass="bg-white" stylesheets="@../../../css/designDashboard.css">
                            <children>
@@ -153,7 +153,7 @@
                               <TextField fx:id="addEvent_desc" layoutX="82.0" layoutY="314.0" prefHeight="26.0" prefWidth="155.0" styleClass="add-textfield" stylesheets="@../../../css/designDashboard.css" />
                               <Button fx:id="addEvent_insert" layoutX="6.0" layoutY="360.0" mnemonicParsing="false" onAction="#insertAddEvents" prefHeight="45.0" prefWidth="75.0" styleClass="insert_btn" stylesheets="@../../../css/designDashboard.css" text="Insert" />
                               <Button fx:id="addEvent_update" layoutX="88.0" layoutY="360.0" mnemonicParsing="false" onAction="#updateAddEvents" prefHeight="45.0" prefWidth="75.0" styleClass="update_btn" stylesheets="@../../../css/designDashboard.css" text="Update" />
-                              <Button fx:id="addEvent_delete" layoutX="170.0" layoutY="360.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="75.0" styleClass="delete_btn" stylesheets="@../../../css/designDashboard.css" text="Delete" />
+                              <Button fx:id="addEvent_delete" layoutX="170.0" layoutY="360.0" mnemonicParsing="false" onAction="#deleteAddEvents" prefHeight="45.0" prefWidth="75.0" styleClass="delete_btn" stylesheets="@../../../css/designDashboard.css" text="Delete" />
                               <Button fx:id="addEvent_clear" layoutX="170.0" layoutY="412.0" mnemonicParsing="false" onAction="#clearAddEventList" prefHeight="45.0" prefWidth="75.0" styleClass="clear_btn" stylesheets="@../../../css/designDashboard.css" text="Clear" />
                            </children>
                         </AnchorPane>
@@ -170,7 +170,7 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <TextField fx:id="addEvent_search" editable="false" layoutX="20.0" layoutY="15.0" prefHeight="30.0" prefWidth="200.0" promptText="Search" styleClass="search" stylesheets="@../../../css/designDashboard.css" />
+                              <TextField fx:id="addEvent_search" layoutX="20.0" layoutY="15.0" onKeyTyped="#searchAddEvents" prefHeight="30.0" prefWidth="200.0" promptText="Search" styleClass="search" stylesheets="@../../../css/designDashboard.css" />
                               <FontAwesomeIcon glyphName="SEARCH" layoutX="28.0" layoutY="36.0" size="1.5em" />
                            </children>
                         </AnchorPane>

@@ -2,6 +2,8 @@ package org.example.catproj;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -237,6 +239,34 @@ public class DashBoardController {
 
     @FXML
     private Label username;
+    public void searchAddEvents() {
+        FilteredList<eventData> filter = new FilteredList<>(listAddEvent, e -> true);
+
+        addEvent_search.textProperty().addListener((observable, oldValue, newValue) -> {
+            filter.setPredicate(predicateEventData -> {
+                if ((newValue == null) || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String keySearch = newValue.toLowerCase();
+
+                if (predicateEventData.getName().toLowerCase().contains(keySearch)) {
+                    return true;
+                } else if (predicateEventData.getDate().toLowerCase().contains(keySearch)) {
+                    return true;
+                } else if (predicateEventData.getTime().toLowerCase().contains(keySearch)) {
+                    return true;
+                }
+
+                return false;
+            });
+        });
+
+        SortedList<eventData> sortData = new SortedList<>(filter);
+        sortData.comparatorProperty().bind(addEvent_tableview.comparatorProperty());
+
+        addEvent_tableview.setItems(sortData);
+    }
 
     public void displayUsername(){
         username.setText(getData.username);
@@ -284,6 +314,7 @@ public class DashBoardController {
         addEvent_time.setText("");
         addEvent_desc.setText("");
         addEvent_imageview.setImage(null);
+        getData.id = 0;
     }
 
     public void updateAddEvents() {
@@ -297,8 +328,6 @@ public class DashBoardController {
                 + "', EVENT_DESC = '" + addEvent_desc.getText()
                 + "', EVENT_IMAGE_PATH = '" + uri
                 + "' WHERE EVENT_ID = '" + getData.id + "'";
-
-        System.out.println(sql);
 
         connect = database.connectDB();
 
@@ -338,6 +367,48 @@ public class DashBoardController {
             }
         }
 
+    }
+
+    public void deleteAddEvents() {
+
+        String sql = "DELETE FROM EVENT_DET WHERE EVENT_ID = '" + getData.id + "'";
+
+        connect = database.connectDB();
+
+        try {
+            Alert alert;
+
+            if (getData.id == 0)
+            {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select an Event.");
+                alert.showAndWait();
+            } else {
+                try (PreparedStatement pstmt = connect.prepareStatement(sql)) {
+                    pstmt.executeUpdate();
+                }
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Event deleted successfully");
+                alert.showAndWait();
+
+                clearAddEventList();
+                showAddEventList();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connect != null) {
+                    connect.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void insertAddEvents(){
@@ -433,7 +504,6 @@ public class DashBoardController {
                 String eventImagePath = result.getString("EVENT_IMAGE_PATH");
 
                 eveD = new eventData(eventID,eventName, eventDate, eventTime, eventDesc, eventImagePath);
-                System.out.println(eveD.getid());
 
                 listData.add(eveD);
 
@@ -502,7 +572,6 @@ public class DashBoardController {
         }
 
         getData.id = eveD.getid();
-        System.out.println(getData.id);
 
         getData.path = eveD.getImag();
         addEvent_name.setText(eveD.getName());
