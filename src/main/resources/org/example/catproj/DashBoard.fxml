@@ -52,7 +52,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="joinEvent_btn" layoutX="10.0" layoutY="270.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="40.0" prefWidth="160.0" styleClass="nav-btn" stylesheets="@../../../css/designDashboard.css" text=" Join Event">
+                  <Button fx:id="joinEvent_btn" layoutX="10.0" layoutY="270.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="40.0" prefWidth="160.0" style="visibility: false;" styleClass="nav-btn" stylesheets="@../../../css/designDashboard.css" text=" Join Event">
                      <graphic>
                         <FontAwesomeIcon fill="WHITE" glyphName="SERVER" size="1.7em" />
                      </graphic>
@@ -60,7 +60,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="participants_btn" layoutX="10.0" layoutY="315.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="40.0" prefWidth="160.0" styleClass="nav-btn" stylesheets="@../../../css/designDashboard.css" text=" Participants">
+                  <Button fx:id="participants_btn" layoutX="10.0" layoutY="315.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="40.0" prefWidth="160.0" style="visibility: false;" styleClass="nav-btn" stylesheets="@../../../css/designDashboard.css" text=" Participants">
                      <graphic>
                         <FontAwesomeIcon fill="WHITE" glyphName="USERS" size="1.7em" />
                      </graphic>
@@ -80,42 +80,53 @@
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <AnchorPane fx:id="dashboard_form" layoutX="146.0" layoutY="150.0" prefHeight="500.0" prefWidth="780.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane fx:id="dashboard_form" layoutX="146.0" layoutY="150.0" prefHeight="500.0" prefWidth="780.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <AnchorPane layoutX="20.0" layoutY="14.0" prefHeight="200.0" prefWidth="740.0" styleClass="bg-white" stylesheets="@../../../css/designDashboard.css">
+                        <AnchorPane layoutX="29.0" layoutY="16.0" prefHeight="462.0" prefWidth="334.0" styleClass="bg-white" stylesheets="@../../../css/designDashboard.css">
                            <children>
-                              <AnchorPane layoutX="14.0" layoutY="12.0" prefHeight="175.0" prefWidth="350.0" styleClass="card1" stylesheets="@../../../css/designDashboard.css">
+                              <Label layoutX="33.0" layoutY="14.0" text="Objective">
+                                 <font>
+                                    <Font name="System Bold" size="34.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="TOP_LEFT" layoutX="15.0" layoutY="70.0" prefHeight="144.0" prefWidth="300.0" text="Our goal is to create an application centralizing Small and Medium-sized Enterprises (SMEs) events, aligning with Sustainable Development Goal 11 (SDG 11). Recognizing the time and energy involved in event planning, we aim to enhance sustainability by optimizing resource usage. Our platform acts as a hub for SME organizers to effortlessly add and manage events, streamlining the process for greater accessibility." textAlignment="JUSTIFY" wrapText="true" />
+                              <Label alignment="TOP_LEFT" layoutX="15.0" layoutY="222.0" prefHeight="214.0" prefWidth="300.0" text="Emphasizing SDG 11 principles, we encourage organizers to showcase sustainable practices in their events, fostering eco-friendly approaches and community engagement.Advanced search and filters facilitate event discovery based on criteria like date and location. Event promotion tools, including social media sharing and email invitations, empower organizers to maximize outreach within the SME community. With a concise, user-friendly interface, our application not only centralizes SME events but also promotes sustainability and community engagement, contributing to the broader objectives of SDG 11." textAlignment="JUSTIFY" wrapText="true" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane layoutX="390.0" layoutY="14.0" prefHeight="461.0" prefWidth="375.0" styleClass="bg-white" stylesheets="@../../../css/designDashboard.css">
+                           <children>
+                              <AnchorPane layoutX="12.0" layoutY="14.0" prefHeight="215.0" prefWidth="350.0" styleClass="card1" stylesheets="@../../../css/designDashboard.css">
                                  <children>
                                     <AnchorPane layoutX="-34.0" layoutY="-25.0" prefHeight="175.0" prefWidth="80.0" styleClass="card1-left" stylesheets="@../../../css/designDashboard.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <FontAwesomeIcon fill="WHITE" glyphName="COMMENTS" layoutX="10.0" layoutY="109.0" size="5em" />
+                                          <FontAwesomeIcon fill="WHITE" glyphName="COMMENTS" layoutX="10.0" layoutY="129.0" size="5em" />
                                        </children></AnchorPane>
-                                    <Label layoutX="89.0" layoutY="122.0" prefHeight="38.0" prefWidth="93.0" text="Total Users" textFill="WHITE">
+                                    <Label alignment="TOP_LEFT" layoutX="85.0" layoutY="53.0" prefHeight="151.0" prefWidth="258.0" text="To be the driving force behind a united and sustainable Small and Medium-sized Enterprises (SMEs) community, contributing to the realization of Sustainable Development Goal 11 (SDG 11) for inclusive and resilient communities." textFill="WHITE" wrapText="true">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="dashboard_totalusers" alignment="CENTER_RIGHT" layoutX="265.0" layoutY="14.0" text="1500" textFill="WHITE">
+                                    <Label fx:id="dashboard_totalusers" alignment="CENTER_RIGHT" layoutX="233.0" layoutY="14.0" text="VISION" textFill="WHITE">
                                        <font>
-                                          <Font size="30.0" />
+                                          <Font name="System Bold" size="30.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane layoutX="375.0" layoutY="12.0" prefHeight="175.0" prefWidth="350.0" styleClass="card3" stylesheets="@../../../css/designDashboard.css">
+                              <AnchorPane layoutX="12.0" layoutY="237.0" prefHeight="215.0" prefWidth="350.0" styleClass="card3" stylesheets="@../../../css/designDashboard.css">
                                  <children>
-                                    <AnchorPane prefHeight="175.0" prefWidth="80.0" styleClass="card3-left" stylesheets="@../../../css/designDashboard.css">
+                                    <AnchorPane prefHeight="215.0" prefWidth="80.0" styleClass="card3-left" stylesheets="@../../../css/designDashboard.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <FontAwesomeIcon fill="WHITE" glyphName="BULLSEYE" layoutX="14.0" layoutY="109.0" size="5em" />
+                                          <FontAwesomeIcon fill="WHITE" glyphName="BULLSEYE" layoutX="14.0" layoutY="129.0" size="5em" />
                                        </children></AnchorPane>
-                                    <Label layoutX="97.0" layoutY="133.0" text="Total Events" textFill="WHITE">
+                                    <Label fx:id="dashboard_totalevents" alignment="CENTER_RIGHT" layoutX="208.0" layoutY="14.0" text="MISSION" textFill="WHITE">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font name="System Bold" size="30.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="dashboard_totalevents" alignment="CENTER_RIGHT" layoutX="265.0" layoutY="14.0" text="1500" textFill="WHITE">
+                                    <Label alignment="TOP_LEFT" layoutX="84.0" layoutY="55.0" prefHeight="151.0" prefWidth="258.0" text="Empowering SMEs through a streamlined event platform, we aim to simplify planning, enhance sustainability practices, and foster collaboration. Our mission is to connect SMEs, amplify their exposure, and collectively advance towards a more sustainable and prosperous future." textFill="WHITE" wrapText="true">
                                        <font>
-                                          <Font size="30.0" />
+                                          <Font size="14.0" />
                                        </font>
                                     </Label>
                                  </children>

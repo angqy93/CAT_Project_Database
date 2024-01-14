@@ -622,63 +622,43 @@ public class DashBoardController {
         if(event.getSource()==dashboard_btn){
             dashboard_form.setVisible(true);
             addEvent_form.setVisible(false);
-            joinEvent_form.setVisible(false);
-            updateEvent_form.setVisible(false);
-            participants_form.setVisible(false);
+//            joinEvent_form.setVisible(false);
+//            participants_form.setVisible(false);
 
             dashboard_btn.setStyle("-fx-background-color: #ae2d3c");
             addEvent_btn.setStyle("-fx-background-color: transparent");
-            joinEvent_btn.setStyle("-fx-background-color: transparent");
-            updateEvent_btn.setStyle("-fx-background-color: transparent");
-            participants_btn.setStyle("-fx-background-color: transparent");
+//            joinEvent_btn.setStyle("-fx-background-color: transparent");
+//            participants_btn.setStyle("-fx-background-color: transparent");
         } else if(event.getSource()==addEvent_btn){
             dashboard_form.setVisible(false);
             addEvent_form.setVisible(true);
-            joinEvent_form.setVisible(false);
-            updateEvent_form.setVisible(false);
-            participants_form.setVisible(false);
+//            joinEvent_form.setVisible(false);
+//            participants_form.setVisible(false);
 
             dashboard_btn.setStyle("-fx-background-color: transparent");
             addEvent_btn.setStyle("-fx-background-color: #ae2d3c");
-            joinEvent_btn.setStyle("-fx-background-color: transparent");
-            updateEvent_btn.setStyle("-fx-background-color: transparent");
-            participants_btn.setStyle("-fx-background-color: transparent");
+//            joinEvent_btn.setStyle("-fx-background-color: transparent");
+//            participants_btn.setStyle("-fx-background-color: transparent");
         }else if(event.getSource()==joinEvent_btn){
             dashboard_form.setVisible(false);
             addEvent_form.setVisible(false);
-            joinEvent_form.setVisible(true);
-            updateEvent_form.setVisible(false);
-            participants_form.setVisible(false);
+//            joinEvent_form.setVisible(true);
+//            participants_form.setVisible(false);
 
             dashboard_btn.setStyle("-fx-background-color: transparent");
             addEvent_btn.setStyle("-fx-background-color: transparent");
-            joinEvent_btn.setStyle("-fx-background-color: #ae2d3c");
-            updateEvent_btn.setStyle("-fx-background-color: transparent");
-            participants_btn.setStyle("-fx-background-color: transparent");
-        }else if(event.getSource()==updateEvent_btn){
-            dashboard_form.setVisible(false);
-            addEvent_form.setVisible(false);
-            joinEvent_form.setVisible(false);
-            updateEvent_form.setVisible(true);
-            participants_form.setVisible(false);
-
-            dashboard_btn.setStyle("-fx-background-color: transparent");
-            addEvent_btn.setStyle("-fx-background-color: transparent");
-            joinEvent_btn.setStyle("-fx-background-color: transparent");
-            updateEvent_btn.setStyle("-fx-background-color: #ae2d3c");
-            participants_btn.setStyle("-fx-background-color: transparent");
+//            joinEvent_btn.setStyle("-fx-background-color: #ae2d3c");
+//            participants_btn.setStyle("-fx-background-color: transparent");
         }else if(event.getSource()==participants_btn){
             dashboard_form.setVisible(false);
             addEvent_form.setVisible(false);
-            joinEvent_form.setVisible(false);
-            updateEvent_form.setVisible(false);
-            participants_form.setVisible(true);
+//            joinEvent_form.setVisible(false);
+//            participants_form.setVisible(true);
 
             dashboard_btn.setStyle("-fx-background-color: transparent");
             addEvent_btn.setStyle("-fx-background-color: transparent");
-            joinEvent_btn.setStyle("-fx-background-color: transparent");
-            updateEvent_btn.setStyle("-fx-background-color: transparent");
-            participants_btn.setStyle("-fx-background-color: #ae2d3c");
+//            joinEvent_btn.setStyle("-fx-background-color: transparent");
+//            participants_btn.setStyle("-fx-background-color: #ae2d3c");
         }
     }
 
@@ -687,5 +667,6 @@ public class DashBoardController {
         displayUsername();
         showAddEventList();
         searchAddEvents();
+
     }
 }
