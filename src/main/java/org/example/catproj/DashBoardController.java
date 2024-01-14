@@ -290,11 +290,15 @@ public class DashBoardController {
 
         String uri = getData.path;
         uri = uri.replace("\\","\\\\");
+
         String sql = "UPDATE EVENT_DET SET EVENT_NAME = '" + addEvent_name.getText()
                 + "', EVENT_DATE = '" + addEvent_date.getText()
                 + "', EVENT_TIME = '" + addEvent_time.getText()
                 + "', EVENT_DESC = '" + addEvent_desc.getText()
-                + "', EVENT_IMAGE_PATH = '" + uri + "'";
+                + "', EVENT_IMAGE_PATH = '" + uri
+                + "' WHERE EVENT_ID = '" + getData.id + "'";
+
+        System.out.println(sql);
 
         connect = database.connectDB();
 
@@ -308,14 +312,14 @@ public class DashBoardController {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
-                alert.setContentText("Please select the movie first.");
+                alert.setContentText("Please fill in the blanks.");
                 alert.showAndWait();
             }else{
                 statement.executeUpdate(sql);
                 alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Error Message");
+                alert.setTitle("Information Message");
                 alert.setHeaderText(null);
-                alert.setContentText("Please select the movie first.");
+                alert.setContentText("Update was made successfully");
                 alert.showAndWait();
 
                 clearAddEventList();
@@ -325,14 +329,12 @@ public class DashBoardController {
         }catch(Exception e){
             e.printStackTrace();
         } finally {
-            // Close the database connection in a finally block to ensure it gets closed even if an exception occurs
             try {
                 if (connect != null) {
                     connect.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                // Handle the exception according to your application's needs
             }
         }
 
@@ -423,14 +425,18 @@ public class DashBoardController {
             eventData eveD;
 
             while(result.next()){
+                int eventID = result.getInt("EVENT_ID");
                 String eventName = result.getString("EVENT_NAME");
                 String eventDate = result.getString("EVENT_DATE");
                 String eventTime = result.getString("EVENT_TIME");
                 String eventDesc = result.getString("EVENT_DESC");
                 String eventImagePath = result.getString("EVENT_IMAGE_PATH");
 
-                eveD = new eventData(eventName, eventDate, eventTime, eventDesc, eventImagePath);
+                eveD = new eventData(eventID,eventName, eventDate, eventTime, eventDesc, eventImagePath);
+                System.out.println(eveD.getid());
+
                 listData.add(eveD);
+
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -460,6 +466,7 @@ public class DashBoardController {
 
         addEvent_tableview.setItems(listAddEvent);
     }
+
 
     private Callback<TableColumn<eventData, String>, TableCell<eventData, String>> getWrapTextCellFactory() {
         return col -> {
@@ -494,8 +501,10 @@ public class DashBoardController {
             return;
         }
 
-        getData.path = eveD.getImag();
+        getData.id = eveD.getid();
+        System.out.println(getData.id);
 
+        getData.path = eveD.getImag();
         addEvent_name.setText(eveD.getName());
         addEvent_date.setText(eveD.getDate());
         addEvent_time.setText(eveD.getTime());
